@@ -58,6 +58,8 @@ import static org.apache.hadoop.hdds.HddsUtils.getScmAddressForClients;
 import static org.apache.hadoop.hdds.scm.ScmConfigKeys.OZONE_SCM_CONTAINER_SIZE;
 import static org.apache.hadoop.hdds.scm.ScmConfigKeys.OZONE_SCM_CONTAINER_SIZE_DEFAULT;
 import static org.apache.hadoop.hdds.utils.HddsServerUtil.getScmSecurityClient;
+
+import org.apache.hadoop.util.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -319,13 +321,21 @@ public class ContainerOperationClient implements ScmClient {
   @Override
   public void activatePipeline(HddsProtos.PipelineID pipelineID)
       throws IOException {
+    long startTime = Time.monotonicNowNanos();
     storageContainerLocationClient.activatePipeline(pipelineID);
+    LOG.info("Invoking method {}, cost {}us",
+            Thread.currentThread() .getStackTrace()[1].getMethodName(),
+            (Time.monotonicNowNanos() - startTime) / 1000.0);
   }
 
   @Override
   public void deactivatePipeline(HddsProtos.PipelineID pipelineID)
       throws IOException {
+    long startTime = Time.monotonicNowNanos();
     storageContainerLocationClient.deactivatePipeline(pipelineID);
+    LOG.info("Invoking method {}, cost {}us",
+            Thread.currentThread() .getStackTrace()[1].getMethodName(),
+            (Time.monotonicNowNanos() - startTime) / 1000.0);
   }
 
   @Override
